@@ -21,7 +21,7 @@ export default function App() {
   const [loading, setLoading] = useState(true)
   const [user, setUser] = useState()
   console.log("vor userEffekt")
-  
+
   useEffect(() => {
     const usersRef = firebase.firestore().collection('users');
 
@@ -74,44 +74,60 @@ export default function App() {
           },
         })}
         tabBarOptions={{
-        labelStyle: { fontSize: 16, marginTop: 0 },
-        tabStyle: { width: 100 },
-        style: { backgroundColor: 'black' },
+          labelStyle: { fontSize: 16, marginTop: 0 },
+          tabStyle: { width: 100, 
+                      marginBottom: Platform.OS === 'android' ? 10 : 0},
+          style: { backgroundColor: 'black',
+                  borderTopWidth: 0,
+                marginBottom: Platform.OS === 'android' ? 10 : 0},
       }} > 
         <Tab.Screen name="Home">
           {props => <HomeScreen {...props} extraData={user} />}
         </Tab.Screen>
-        <Tab.Screen name="Setting" component={SettingScreen} />
+        <Tab.Screen name="Setting">
+          {props => <SettingScreen {...props} extraData={user} />}
+        </Tab.Screen>
       </Tab.Navigator>
      
+
+  const changeName = () => 
+    firebase.firestore().collection('users')
+            .doc(this.user.uid)
+            .update({
+                fullName: fullName,
+            })
+            .then(() => {
+                console.log("Username updated.");
+            });
+
     return (
-      <NavigationContainer>
-        <Stack.Navigator 
-          screenOptions={{
-          //   headerStyle: {
-          //   backgroundColor: 'black',
-          //   elevation:0,
-          // },
-          headerShown: false,
-          // headerTintColor: 'white',
-          // headerTitleStyle: {
-          //   fontSize: 24 ,
-          //   color: 'white'
-          // },
-          cardStyle: { backgroundColor: 'black' },
-          style: { backgroundColor: 'black' }
-        }}>
-        {loading ? (
-          <Stack.Screen name="Splash" component={SplashScreen} />
-        ) : user ? (
-          <Stack.Screen name="Home" children={HomeNav}/>
-        ) : (
-          <>
-            <Stack.Screen name="Login" component={LoginScreen} />
-            <Stack.Screen name="Registration" component={RegistrationScreen} />
-          </>
-        )}
-        </Stack.Navigator>
-      </NavigationContainer>
+        <NavigationContainer>
+          <Stack.Navigator 
+            screenOptions={{
+            //   headerStyle: {
+            //   backgroundColor: 'black',
+            //   elevation:0,
+            // },
+            headerShown: false,
+            // headerTintColor: 'white',
+            // headerTitleStyle: {
+            //   fontSize: 24 ,
+            //   color: 'white'
+            // },
+            cardStyle: { backgroundColor: 'black' },
+            style: { backgroundColor: 'black' }
+          }}>
+          {loading ? (
+            <Stack.Screen name="Splash" component={SplashScreen} />
+          ) : user ? (
+            <Stack.Screen name="Home" children={HomeNav}/>
+          ) : (
+            <>
+              <Stack.Screen name="Login" component={LoginScreen} />
+              <Stack.Screen name="Registration" component={RegistrationScreen} />
+            </>
+          )}
+          </Stack.Navigator>
+        </NavigationContainer>
     );
 }

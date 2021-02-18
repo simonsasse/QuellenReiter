@@ -7,12 +7,20 @@ export default StyleSheet.create({
         flex: 1,
         alignItems: 'center',
         backgroundColor: 'black',
-        color: 'white'
+        color: 'white',
+        paddingTop: Platform.OS === 'android' ? 25 : 0
     },
     text: {
         color: 'white',
         fontSize: 30,
         margin: 30
+    },
+    smallText: {
+        color: 'white',
+        fontSize: 20,
+        margin: 30,
+        marginBottom:5,
+        marginTop:5
     },
     logo: {
         flex: 1,
@@ -33,6 +41,16 @@ export default StyleSheet.create({
         marginRight: 30,
         paddingLeft: 16
     },
+    smallInput: {
+        padding:10,
+        paddingRight:50,
+        marginLeft:30,
+        height: 48,
+        borderRadius: 5,
+        overflow: 'hidden',
+        backgroundColor: 'white',
+        marginTop: 10
+    },
     button: {
         backgroundColor: 'black',
         borderWidth: 1,
@@ -41,9 +59,38 @@ export default StyleSheet.create({
         marginLeft: 30,
         marginRight: 30,
         marginTop: 20,
+        marginBottom: 10,
         height: 48,
         borderRadius: 5,
         alignItems: "center",
+        justifyContent: 'center'
+    },
+    greenButton: {
+        backgroundColor: 'green',
+        borderWidth: 1,
+        padding:10,
+        borderColor: 'white',
+        marginLeft: 30,
+        marginRight: 30,
+        marginTop: 20,
+        marginBottom: 10,
+        height: 48,
+        borderRadius: 5,
+        alignItems: "center",
+        justifyContent: 'center'
+    },
+    smallButton: {
+        backgroundColor: 'black',
+        borderWidth: 1,
+        padding:10,
+        borderColor: 'white',
+        marginRight: 30,
+        marginTop: 10,
+        marginLeft: 'auto',
+        height: 48,
+        borderRadius: 5,
+        alignSelf: "flex-end",
+        alignItems: "flex-end",
         justifyContent: 'center'
     },
     buttonTitle: {
