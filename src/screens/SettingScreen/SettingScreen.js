@@ -1,4 +1,5 @@
 import { firebase } from '../../firebase/config'
+import '@firebase/firestore';
 import React, { useState } from 'react'
 import { Text, SafeAreaView, TextInput, TouchableOpacity, NativeModules } from 'react-native'
 import { KeyboardAwareScrollView } from 'react-native-keyboard-aware-scroll-view';
@@ -18,6 +19,19 @@ export default function SettingScreen(props) {
                 console.log(props.extraData);
             });
         props.extraData.fullName = name;
+    }
+
+    const resetQuests = (name) => {
+
+        // add list of all quests to userdata
+        firebase.firestore().collection('users')
+            .doc(props.extraData.id)
+            .update({
+                playedQuests: firebase.firestore.FieldValue.delete(),
+            })
+            .then(() => {
+                console.log("quests for "+name+" reset.");
+            });
     }
 
     const signOutPress = () => {
@@ -50,6 +64,14 @@ export default function SettingScreen(props) {
                                 style={styles.smallButton}
                                 onPress={() => changeName(tempName)}>
                                 <Text style={styles.buttonTitle}>ändern</Text>
+                            </TouchableOpacity>
+                        </SafeAreaView>
+                        <Text style={styles.smallText}>Ändere deinen Nutzernamen:</Text>
+                        <SafeAreaView style={{ flexDirection: 'row', width: '100%' }}>
+                            <TouchableOpacity
+                                style={styles.smallButton}
+                                onPress={() => resetQuests(tempName)}>
+                                <Text style={styles.buttonTitle}>Gespielte Fragen zuruecksetzen.</Text>
                             </TouchableOpacity>
                         </SafeAreaView>
                         <TouchableOpacity

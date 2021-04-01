@@ -1,20 +1,58 @@
-import React, { useState } from 'react'
+import React, { useState, useReducer } from 'react'
 import { Image, Text, TextInput, TouchableOpacity, View } from 'react-native'
 import { KeyboardAwareScrollView } from 'react-native-keyboard-aware-scroll-view';
 import styles from '../styles';
 import { firebase } from '../../firebase/config'
 import { SafeAreaView } from 'react-native-safe-area-context';
 import { useEffect } from 'react';
+import { useSelector, shallowEqual, useDispatch } from "react-redux"
+
+
+
+import '../../redux/reducer'
+import { signUpUser} from '../../redux/actions';
+import * as actionTypes from '../../redux/actionTypes';
+import * as actions from '../../redux/actions';
+import userReducer from '../../redux/reducer';
 
 export default function RegistrationScreen({navigation}) {
+
     const verifyEmail = /^(([^<>()[\]\\.,;:\s@"]+(\.[^<>()[\]\\.,;:\s@"]+)*)|(".+"))@((\[[0-9]{1,3}\.[0-9]{1,3}\.[0-9]{1,3}\.[0-9]{1,3}\])|(([a-zA-Z\-0-9]+\.)+[a-zA-Z]{2,}))$/;
 
-    const [fullName, setFullName] = useState('')
-    const [uName, setUName] = useState('')
-    const [email, setEmail] = useState('')
-    const [password, setPassword] = useState('')
-    const [confirmPassword, setConfirmPassword] = useState('')
+    // const uName = ''
+    // const fullName = ''
+    // const password = ''
+    // const confirmPassword = ''
+    // const email = ''
+    // const [state, dispatch] = useReducer(userReducer, {   
+    //                                                             fullName: '',
+    //                                                             uName: 'hallo',
+    //                                                             email: '',
+    //                                                             password: '',
+    //                                                             confirmPassword: ''
+    //                                                         })
 
+    const dispatch = useDispatch();
+
+    // const { fullName, uName, password, email, confirmPassword } = useSelector(state => {fullName, 
+    //                                                                                     uName, 
+    //                                                                                     email, 
+    //                                                                                     password, 
+    //                                                                                     confirmPassword});
+
+    const password = useSelector(state => state.password);
+    const email = useSelector(state => state.email);
+    const fullName = useSelector(state => state.fullName);
+    const confirmPassword = useSelector(state => state.confirmPassword);
+    const uName = useSelector(state => state.uName);
+
+    // const [fullName, dispatch] = React.useReducer(useReducer, {fullName})
+    // const [uName, dispatch] = React.useReducer(useReducer, {uName})
+    // const [email, dispatch] = React.useReducer(useReducer, {email})
+    // const [password, dispatch] = React.useReducer(useReducer, {password})
+    // const [confirmPassword, dispatch] = React.useReducer(useReducer, {confirmPassword})
+
+    
     const [registerElement, setRegisterElement] =   useState(<TouchableOpacity
                                                                 style={styles.button}
                                                                 onPress={() => alert("So kommst du nicht rein!")}>
@@ -22,9 +60,9 @@ export default function RegistrationScreen({navigation}) {
                                                             </TouchableOpacity>);
     console.log("on Registrationscreen")
 
-    useEffect(() => {
-        setUName(uName.replace(/[^A-Za-z0-9_.-]/,''))
-    }, [uName])
+    // useEffect(() => {
+    //     setUName(uName.replace(/[^A-Za-z0-9_.-]/,''))
+    // }, [uName])
 
     useEffect(() => {
 
@@ -79,44 +117,19 @@ export default function RegistrationScreen({navigation}) {
         })
             
     }, [email, uName, password, confirmPassword]);
-    const onFooterLinkPress = () => {
-        navigation.navigate('Login')
-    }
+
 
     const restrictChar = (e) => {
         console.log(e)
     }
 
     const onRegisterPress = () => {
+
         if (password !== confirmPassword) {
             alert("Passwords don't match.")
             return
         }
-        firebase
-            .auth()
-            .createUserWithEmailAndPassword(email, password)
-            .then((response) => {
-                const uid = response.user.uid
-                const data = {
-                    id: uid,
-                    email,
-                    fullName,
-                    uName
-                };
-                const usersRef = firebase.firestore().collection('users')
-                usersRef
-                    .doc(uid)
-                    .set(data)
-                    .then(() => {
-                        navigation.navigate('Home', {user: data})
-                    })
-                    .catch((error) => {
-                        alert(error)
-                    });
-            })
-            .catch((error) => {
-                alert(error)
-        });
+        dispatch(actions.signUpUser(password, email, uName, fullName))
     }
 
     return (
@@ -133,7 +146,7 @@ export default function RegistrationScreen({navigation}) {
                     style={styles.input}
                     placeholder='wie sollen wir dich nennen?'
                     placeholderTextColor="#aaaaaa"
-                    onChangeText={(text) => setFullName(text)}
+                    onChangeText={(text) => dispatch({ type: actionTypes.UPDATE_FULLNAME, payload: text })}
                     value={fullName}
                     underlineColorAndroid="transparent"
                     autoCapitalize="none"
@@ -143,7 +156,7 @@ export default function RegistrationScreen({navigation}) {
                     placeholder='eindeutiger Nutzername'
                     placeholderTextColor="#aaaaaa"
                     onKeyPress={(char) => restrictChar(char)}
-                    onChangeText={(text) => {setUName(text)}}
+                    onChangeText={(text) => dispatch({ type: actionTypes.UPDATE_UNAME, payload: text })}
                     value={uName}
                     underlineColorAndroid="transparent"
                     autoCapitalize="none"
@@ -152,7 +165,7 @@ export default function RegistrationScreen({navigation}) {
                     style={styles.input}
                     placeholder='E-mail'
                     placeholderTextColor="#aaaaaa"
-                    onChangeText={(text) => setEmail(text)}
+                    onChangeText={(text) => dispatch({ type: actionTypes.UPDATE_EMAIL, payload: text })}
                     value={email}
                     underlineColorAndroid="transparent"
                     autoCapitalize="none"
@@ -162,7 +175,7 @@ export default function RegistrationScreen({navigation}) {
                     placeholderTextColor="#aaaaaa"
                     secureTextEntry
                     placeholder='Passwort'
-                    onChangeText={(text) => setPassword(text)}
+                    onChangeText={(text) => dispatch({ type: actionTypes.UPDATE_PASSWORD, payload: text })}
                     value={password}
                     underlineColorAndroid="transparent"
                     autoCapitalize="none"
@@ -172,13 +185,18 @@ export default function RegistrationScreen({navigation}) {
                     placeholderTextColor="#aaaaaa"
                     secureTextEntry
                     placeholder='Bestätige Passwort'
-                    onChangeText={(text) => setConfirmPassword(text)}
+                    onChangeText={(text) => dispatch({ type: actionTypes.UPDATE_CONFIRM_PASSWORD, payload: text })}
                     value={confirmPassword}
                     underlineColorAndroid="transparent"
                     autoCapitalize="none"
                 />
                 <View style={styles.footerView}>
-                    <Text style={styles.footerText}>Du hast schon einen Account? Nice! <Text onPress={onFooterLinkPress} style={styles.footerLink}>Einloggen</Text></Text>
+                    <Text style={styles.footerText}>
+                        Du hast schon einen Account? Nice! 
+                        <Text onPress={() => navigation.navigate('Login') } style={styles.footerLink}>
+                            Einloggen
+                        </Text>
+                    </Text>
                 </View>
             </KeyboardAwareScrollView>
         </SafeAreaView>
