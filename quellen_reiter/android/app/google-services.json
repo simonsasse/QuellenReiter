@@ -1,0 +1,47 @@
+{
+  "project_info": {
+    "project_number": "974166135260",
+    "firebase_url": "https://quellenreiter-8874c-default-rtdb.europe-west1.firebasedatabase.app",
+    "project_id": "quellenreiter-8874c",
+    "storage_bucket": "quellenreiter-8874c.appspot.com"
+  },
+  "client": [
+    {
+      "client_info": {
+        "mobilesdk_app_id": "1:974166135260:android:0fbcf5cf048133a6aa3f19",
+        "android_client_info": {
+          "package_name": "com.quellenreiter.quiz"
+        }
+      },
+      "oauth_client": [
+        {
+          "client_id": "974166135260-94sk7pnc9d6vt1obv6turkto0tgjuefq.apps.googleusercontent.com",
+          "client_type": 3
+        }
+      ],
+      "api_key": [
+        {
+          "current_key": "AIzaSyCo717zlOEM4Gx1fmEdIN2UYsNBYdCqS_o"
+        }
+      ],
+      "services": {
+        "appinvite_service": {
+          "other_platform_oauth_client": [
+            {
+              "client_id": "974166135260-94sk7pnc9d6vt1obv6turkto0tgjuefq.apps.googleusercontent.com",
+              "client_type": 3
+            },
+            {
+              "client_id": "974166135260-uc146gs3lnfjijtnd4ga74b7bq2f1rq8.apps.googleusercontent.com",
+              "client_type": 2,
+              "ios_info": {
+                "bundle_id": "com.quellenreiter"
+              }
+            }
+          ]
+        }
+      }
+    }
+  ],
+  "configuration_version": "1"
+}
